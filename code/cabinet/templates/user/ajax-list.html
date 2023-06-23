@@ -1,0 +1,53 @@
+{% load static %}
+
+<div class="table-responsive mt-3">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Фото</th>
+            <th>Фамилия имя/Email</th>
+            <th>Компетенции</th>
+            <th>Проектов</th>
+            <th>Задач</th>
+            <th>Комментариев</th>
+            <th>Общее время работы</th>
+            {% if projects %}
+            <th></th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td class="photo align-middle">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" class="img-fluid rounded" alt="{{ user }}">
+                    {% else %}
+                        <img src="{% static 'assets/images/no-image.png' %}" class="img-fluid rounded" alt="{{ user }}">
+                    {% endif %}
+                </td>
+                <td class="align-middle"><a href="{% url 'cabinet:user-page' user_id=user.pk %}">{{ user }}</a></td>
+                <td class="align-middle">
+                    {% for c in user.usercompetence_set.all %}
+                        <div class="badge bg-warning m-1">{{ c.competence }}</div>
+                    {% empty %}
+                        Не указаны
+                    {% endfor %}
+                </td>
+                <td class="text-center align-middle">{{ user.projects }}</td>
+                <td class="text-center align-middle">{{ user.tasks }}</td>
+                <td class="text-center align-middle">{{ user.taskcomment_set.count }}</td>
+                <td class="text-center align-middle">{{ user.work_time|default:'0' }} ч.</td>
+                {% if projects %}
+                <td class="align-middle">
+                    {% if request.user != user and user.command_invites %}
+                        {% url 'cabinet:user-modal-invite' user_id=user.pk as modal_url %}
+                        {% include 'base_link.html' with url='#' class='btn btn-primary' get=modal_url text='<i class="bi bi-plus-lg"></i>' %}
+                    {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

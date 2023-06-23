@@ -1,0 +1,83 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block head %}<meta name="csrfmiddlewaretoken" content="{{ csrf_token }}">{% endblock %}
+
+{% block description %}
+<a href="#" class="nav-link fs-5 px-2 z-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{{ project.description }}">
+    <i class="bi bi-info-circle"></i>
+</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row align-items-center mt-3">
+        <div class="col fs-4">Спринты</div>
+        {% if project_sprint %}
+        <div class="col-auto">
+            {% url 'cabinet:sprint-create' project_id=project.pk as url_form %}
+            {% url 'cabinet:sprint-modal-create' project_id=project.pk as url_modal %}
+            {% include 'base_link.html' with url=url_form class='btn btn-success' get=url_modal text='<i class="bi bi-plus-lg"></i> Создать спринт' %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-4 g-2 mt-1">
+        {% for sprint in sprints %}
+            <div class="col">
+                <div class="card{% if sprint.is_end_past_due %} border-success{% endif %} sprint rounded-0" data-sprint-id="{{ sprint.pk }}">
+                    <div class="card-body">
+                        <a class="h5 card-title" href="{{ sprint.get_absolute_url }}">{{ sprint.name }}</a>
+                        <p class="card-text mt-2">{{ sprint.start }} &mdash; {{ sprint.end }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">
+                <p class="m-0">Спринтов еще нет</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row align-items-center mt-3">
+        <div class="col fs-4">Задачи</div>
+        {% if task_create %}
+        <div class="col-auto">
+            {% url 'cabinet:task-create' project_id=project.pk as url_form %}
+            {% include 'base_link.html' with url=url_form class='btn btn-success' text='<i class="bi bi-plus-lg"></i> Создать задачу' %}
+        </div>
+        {% endif %}
+    </div>
+    <div id="ajaxError"></div>
+    <div class="row align-items-center mt-3">
+        <div class="col">
+            <div class="bg-danger-subtle px-3 py-1 d-inline-block border border-danger-subtle"></div>
+            Данные задачи являются глобальными и не относятся к спринтам.
+        </div>
+        <div class="col">
+            <div class="bg-warning-subtle px-3 py-1 d-inline-block border border-warning-subtle"></div>
+            Данные задачи являются техническим долгом с прошлых спринтов.
+        </div>
+    </div>
+    <div class="alert alert-secondary mt-3" role="alert">
+        <p>Вы можете перетаскивать сразу несколько задач, нажав на каждую из них. Задачи, на которые Вы уже нажали, выделяются тенью.</p>
+        <p class="mb-0">Также Вы можете перетащить задачу на определенный спринт.</p>
+    </div>
+    <div class="row mt-y">
+        {% for key, value in tasks.items %}
+            <div class="col">
+                <div class="card rounded-0 h-100">
+                    <div class="card-header bg-body">{{ value.title }}</div>
+                    <div class="card-body bg-secondary bg-opacity-10 task-list" data-status="{{ key }}">
+                        {% for task in value.tasks %}
+                            {% include 'project/task/card.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/vendor/sortable/Sortable.min.js' %}"></script>
+    <script src="{% static 'assets/js/task-list.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,2 @@
+Регистрация на сайте успешно завершена!
+Для активации вашего аккаунта необходимо перейти по ссылке: https://{{ site }}{% url 'main:django_registration_activate' activation_key=activation_key %}

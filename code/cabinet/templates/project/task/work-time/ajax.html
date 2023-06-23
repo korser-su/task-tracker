@@ -1,0 +1,28 @@
+<form action="{% url 'cabinet:task-work-create' project_id=project_id task_id=task_id %}" method="post" class="card">
+    <div class="card-body">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button type="reset" class="btn btn-secondary">Сбросить</button>
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </div>
+</form>
+{% for time in times %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">{{ time.hours }} ч. - {{ time.description }}</div>
+                <div class="col-auto text-end">
+                    <a href="{{ time.get_delete_url }}" class="btn btn-danger" hx-get="{{ time.modal_get_delete_url }}" hx-target="#modal" hx-trigger="click" hx-swap="innerHtml">
+                        <i class="bi bi-trash3-fill"></i>
+                    </a>
+                    <a href="{{ time.get_update_url }}" class="btn btn-warning" hx-get="{{ time.modal_get_update_url }}" hx-target="#modal" hx-trigger="click" hx-swap="innerHtml">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">{{ time.created_at }}</small>
+        </div>
+    </div>
+{% endfor %}

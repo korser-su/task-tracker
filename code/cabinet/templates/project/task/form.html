@@ -1,0 +1,115 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <form class="my-3" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next|urlencode }}">{% endif %}
+        {{ form.type }}
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    {{ form.name }}
+                    {% if form.name.help_text %}<div class="form-text">{{ form.name.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.name.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.content.id_for_label }}">{{ form.content.label }}</label>
+                    {{ form.content }}
+                    {% if form.content.help_text %}<div class="form-text">{{ form.content.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.content.errors }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="{{ form.quality.id_for_label }}">{{ form.quality.label }}</label>
+                        {{ form.quality }}
+                        {% if form.quality.help_text %}<div class="form-text">{{ form.quality.help_text|safe }}</div>{% endif %}
+                        <div class="invalid-feedback">{{ form.quality.errors }}</div>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="{{ form.engagement.id_for_label }}">{{ form.engagement.label }}</label>
+                        {{ form.engagement }}
+                        {% if form.engagement.help_text %}<div class="form-text">{{ form.engagement.help_text|safe }}</div>{% endif %}
+                        <div class="invalid-feedback">{{ form.engagement.errors }}</div>
+                    </div>
+                </div>
+                {% for file in files %}
+                    <div class="card mb-3 file_{{ file.pk }}">
+                        <div class="card-body row align-items-center">
+                            <input type="hidden" name="file_ids" value="{{ file.pk }}">
+                            <div class="col">{{ file }}</div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger" onclick="this.closest('.card').remove();">
+                                    <i class="bi bi-trash3-fill"></i> Удалить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Прикрепляемые файлы</label>
+                    <input class="form-control" type="file" id="formFile" name="files" multiple>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.parent.id_for_label }}">{{ form.parent.label }}</label>
+                    {{ form.parent }}
+                    {% if form.parent.help_text %}<div class="form-text">{{ form.parent.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.parent.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.member.id_for_label }}">{{ form.member.label }}</label>
+                    {{ form.member }}
+                    {% if form.member.help_text %}<div class="form-text">{{ form.member.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.member.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                    {{ form.status }}
+                    {% if form.status.help_text %}<div class="form-text">{{ form.status.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.status.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.sprint.id_for_label }}">{{ form.sprint.label }}</label>
+                    {{ form.sprint }}
+                    {% if form.sprint.help_text %}<div class="form-text">{{ form.sprint.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.sprint.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.checked_date.id_for_label }}">{{ form.checked_date.label }}</label>
+                    {{ form.checked_date }}
+                    {% if form.checked_date.help_text %}<div class="form-text">{{ form.checked_date.help_text|safe }}</div>{% endif %}
+                    <div class="invalid-feedback">{{ form.checked_date.errors }}</div>
+                </div>
+                <div class="btn-group w-100">
+                    <button type="reset" class="btn btn-secondary">Сбросить</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/vendor/ckeditor5/ckeditor.js' %}"></script>
+    <script>
+        (() => {
+            const editorElem = document.createElement('div', {id: 'editor'}),
+                contentElem = document.getElementById('id_content');
+            contentElem.after(editorElem);
+            contentElem.style.display = 'None';
+            ClassicEditor.create(editorElem).then(editor => {
+                editor.setData(contentElem.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&equals;', '='));
+                window.editor = editor;
+                editor.model.document.on('change:data', (evt, data) => {
+                    contentElem.innerHTML = editor.getData();
+                });
+            }).catch(error => {
+                console.error(error);
+            });
+        })();
+    </script>
+{% endblock %}

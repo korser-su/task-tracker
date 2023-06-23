@@ -1,0 +1,5 @@
+{% for c in competences %}
+    <button class="dropdown-item" type="button" data-id="{{ c.pk }}">{{ c.name }}</button>
+{% empty %}
+    <div class="dropdown-item">Компетенции не найдены</div>
+{% endfor %}

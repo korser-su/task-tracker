@@ -1,0 +1,16 @@
+{% extends "base_auth.html" %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+    <li class="list-group-item">Регистрация</li>
+    <li class="list-group-item border-bottom-0 mb-auto">
+        <form method="post">{% csrf_token %}
+            {{ form.as_div }}
+            <div class="mt-3">
+                <button class="btn btn-success me-1" type="submit">Зарегистрироваться</button>
+                <button class="btn btn-warning" type="reset">Сбросить</button>
+            </div>
+        </form>
+    </li>
+{% endblock %}

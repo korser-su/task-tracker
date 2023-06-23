@@ -1,0 +1,144 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block head %}<meta name="csrfmiddlewaretoken" content="{{ csrf_token }}">{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <p class="fs-4 mt-3">Задействованные в данном спринте люди</p>
+            {% if involved %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-3 g-2">
+                {% for user in involved %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="row align-items-center">
+                                    <div class="col-4">
+                                        {% if user.photo %}
+                                            <img src="{{ user.photo.url }}" class="img-fluid img-thumbnail rounded m-2" alt="{{ user }}">
+                                        {% else %}
+                                            <img src="{% static 'assets/images/no-image.png' %}" class="img-fluid img-thumbnail rounded m-2" alt="{{ user }}">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col">
+                                        <a href="{% url 'cabinet:member-page' project_id=project_id user_id=user.pk %}">{{ user }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p class="fs-5">Вы ещё ни на кого не назначили задачи <i class="bi bi-emoji-frown"></i></p>
+            {% endif %}
+        </div>
+        <div class="col">
+            <p class="fs-4 mt-3">Незадействованные в данном спринте люди</p>
+            {% if unused %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-3 g-2">
+            {% for user in unused %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="row align-items-center">
+                                <div class="col-3">
+                                    {% if user.photo %}
+                                        <img src="{{ user.photo.url }}" class="img-fluid img-thumbnail rounded m-2" alt="{{ user }}">
+                                    {% else %}
+                                        <img src="{% static 'assets/images/no-image.png' %}" class="img-fluid img-thumbnail rounded m-2" alt="{{ user }}">
+                                    {% endif %}
+                                </div>
+                                <div class="col">
+                                    <a href="{% url 'cabinet:member-page' project_id=project_id user_id=user.pk %}">{{ user }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            {% else %}
+                <p class="fs-5">Вся команда принимает участие в данном спринте <i class="bi bi-emoji-smile"></i></p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col">С: {{ sprint.start }}</div>
+        <div class="col text-end">По: {{ sprint.end }}</div>
+    </div>
+    <div class="row align-items-center mt-3">
+        <div class="col fs-4">Задачи</div>
+        {% if task_create %}
+        <div class="col-auto">
+            {% url 'cabinet:task-create' project_id=project_id as url_form %}
+            {% include 'base_link.html' with url=url_form class='btn btn-success' text='<i class="bi bi-plus-lg"></i> Создать задачу' %}
+        </div>
+        {% endif %}
+    </div>
+    <div id="ajaxError"></div>
+    <div class="row align-items-center mt-3">
+        <div class="col">
+            <div class="bg-warning-subtle px-3 py-1 d-inline-block border border-warning-subtle"></div>
+            Данные задачи являются техническим долгом текущего спринта.
+        </div>
+    </div>
+    <div class="alert alert-secondary mt-3" role="alert">
+        Вы можете перетаскивать сразу несколько задач, нажав на каждую из них. Задачи, на которые Вы уже нажали, выделяются тенью.
+    </div>
+    <div class="row mt-y">
+        {% for key, value in tasks.items %}
+            <div class="col">
+                <div class="card rounded-0 h-100">
+                    <div class="card-header bg-body">{{ value.title }}</div>
+                    <div class="card-body bg-secondary bg-opacity-10 task-list" data-status="{{ key }}">
+                        {% for task in value.tasks %}
+                            {% include 'project/task/card.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/vendor/sortable/Sortable.min.js' %}"></script>
+    <script>
+        (() => {
+            'use strict'
+            const taskListElements = document.querySelectorAll('.task-list'),
+                ajaxError = document.getElementById('ajaxError');
+            for (let i = 0; i < taskListElements.length; i++) {
+                new Sortable(taskListElements[i], {
+                    group: 'taskList', animation: 150, sort: false, multiDrag: true, selectedClass: 'shadow',
+                    onAdd: (evt) => {
+                        if (evt.items.length !== 0) {
+                            for (let i = 0; i < evt.items.length; i++) {
+                                changeTaskStatus(evt.items[i], evt.to);
+                            }
+                        } else changeTaskStatus(evt.item, evt.to);
+                    }
+                });
+            }
+            function changeTaskStatus(item, target) {
+                let request = new XMLHttpRequest(), formData = new FormData();
+                request.open('POST', '{{ sprint.project.get_absolute_url }}ajax/');
+                request.onloadend = function () {
+                    const response = JSON.parse(this.responseText);
+                    if (!response.success) {
+                        ajaxError.innerHTML = '<div class="alert alert-danger alert-dismissible">' +
+                            'Не удалось изменить статус задачи. Попробуйте обновить страницу, пожалуйста. ' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                    }
+                };
+                formData.append('csrfmiddlewaretoken', document.querySelector('meta[name="csrfmiddlewaretoken"]').content);
+                formData.append('status', target.dataset.status);
+                formData.append('taskId', item.dataset.taskId);
+                request.send(formData);
+            }
+        })();
+    </script>
+{% endblock %}

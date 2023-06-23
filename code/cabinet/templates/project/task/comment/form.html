@@ -1,0 +1,37 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="card my-3 rounded-0">
+        <form class="card-body"{% if url %} action="{{ url }}"{% endif %} method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if next %}<input type="hidden" name="next" value="{{ next|urlencode }}">{% endif %}
+            {% if comment_id %}<input type="hidden" name="parent" value="{{ comment_id }}">{% endif %}
+            {{ form.as_div }}
+            {% for file in files %}
+                <div class="card mb-3">
+                    <div class="card-body row align-items-center">
+                        <input type="hidden" name="file_ids" value="{{ file.pk }}">
+                        <div class="col">{{ file }}</div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger" onclick="this.closest('.card').remove();">
+                                <i class="bi bi-trash3-fill"></i> Удалить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Прикрепляемые файлы</label>
+                <input class="form-control" type="file" id="formFile" name="files" multiple>
+            </div>
+            <div class="row">
+                <div class="col text-end">
+                    <button type="reset" class="btn btn-secondary">Отмена</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,4 @@
+from .authentication import CustomAuthenticationForm
+from .password_change import CustomPasswordChangeForm
+from .password_reset import CustomPasswordResetForm
+from .registration import CustomRegistrationForm

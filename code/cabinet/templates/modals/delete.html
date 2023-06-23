@@ -1,0 +1,15 @@
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Удалить?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        {% if name %}<div class="modal-body">Вы действительно хотите удалить {{ name|safe }}?</div>
+        {% else %}<div class="modal-body">Вы действительно хотите удалить данную запись?</div>
+        {% endif %}
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <a href="{{ url }}" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> Удалить</a>
+        </div>
+    </div>
+</div>

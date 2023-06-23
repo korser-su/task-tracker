@@ -1,0 +1,223 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block head %}<meta name="csrfmiddlewaretoken" content="{{ csrf_token }}">{% endblock %}
+
+{% block content %}
+    <div class="card my-3 rounded-0">
+        <form class="card-body" method="post">
+            {% csrf_token %}
+            {% if next %}
+            <input type="hidden" name="next" value="{{ next|urlencode }}">
+            {% endif %}
+            {{ form.as_div }}
+            <div class="row mb-3">
+                <div class="col">Права доступа</div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Роли</div>
+                <div class="card-body row">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="role" value="create" id="switchCheckRoleCreate"{% if form.instance and 'create' in form.instance.permissions.role %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckRoleCreate">Создание</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="role" value="read" id="switchCheckRoleRead"{% if form.instance and 'read' in form.instance.permissions.role %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckRoleRead">Просмотр</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="role" value="update" id="switchCheckRoleUpdate"{% if form.instance and 'update' in form.instance.permissions.role %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckRoleUpdate">Обновление</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="role" value="delete" id="switchCheckRoleDelete"{% if form.instance and 'delete' in form.instance.permissions.role %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckRoleDelete">Удаление</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Участники проекта</div>
+                <div class="card-body row">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="member" value="create" id="switchCheckMemberCreate"{% if form.instance and 'create' in form.instance.permissions.member %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckMemberCreate">Создание</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="member" value="read" id="switchCheckMemberRead"{% if form.instance and 'read' in form.instance.permissions.member %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckMemberRead">Просмотр</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="member" value="update" id="switchCheckMemberUpdate"{% if form.instance and 'update' in form.instance.permissions.member %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckMemberUpdate">Обновление</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="member" value="delete" id="switchCheckMemberDelete"{% if form.instance and 'delete' in form.instance.permissions.member %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckMemberDelete">Удаление</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Проекты</div>
+                <div class="card-body row">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="project" value="read" id="switchCheckProjectRead"{% if form.instance and 'read' in form.instance.permissions.project %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckProjectRead">Просмотр</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="project" value="update" id="switchCheckProjectUpdate"{% if form.instance and 'update' in form.instance.permissions.project %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckProjectUpdate">Обновление</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="project" value="delete" id="switchCheckProjectDelete"{% if form.instance and 'delete' in form.instance.permissions.project %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckProjectDelete">Удаление</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="project" value="sprint" id="switchCheckProjectSprint"{% if form.instance and 'sprint' in form.instance.permissions.project %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckProjectSprint">Спринты</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Задачи</div>
+                <div class="card-body row">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="task" value="create" id="switchCheckDtaskCreate"{% if form.instance and 'create' in form.instance.permissions.task %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskCreate">Создание</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="task" value="update" id="switchCheckDtaskUpdate"{% if form.instance and 'update' in form.instance.permissions.task %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskUpdate">Обновление</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="task" value="delete" id="switchCheckDtaskDelete"{% if form.instance and 'delete' in form.instance.permissions.task %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskDelete">Удаление</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Комментарии к задачам</div>
+                <div class="card-body row">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskComment" value="create" id="switchCheckDtaskCommentCreate"{% if form.instance and 'create' in form.instance.permissions.taskComment %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskCommentCreate">Создание</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskComment" value="read" id="switchCheckDtaskCommentRead"{% if form.instance and 'read' in form.instance.permissions.taskComment %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskCommentRead">Просмотр</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskComment" value="update" id="switchCheckDtaskCommentUpdate"{% if form.instance and 'update' in form.instance.permissions.taskComment %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskCommentUpdate">Обновление</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskComment" value="delete" id="switchCheckDtaskCommentDelete"{% if form.instance and 'delete' in form.instance.permissions.taskComment %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskCommentDelete">Удаление</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">Списания времени в задачах</div>
+                <div class="card-body row">
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskTime" value="create" id="switchCheckDtaskTimeCreate"{% if form.instance and 'create' in form.instance.permissions.taskTime %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskTimeCreate">Создание</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskTime" value="read" id="switchCheckDtaskTimeRead"{% if form.instance and 'read' in form.instance.permissions.taskTime %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskTimeRead">Просмотр</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskTime" value="update" id="switchCheckDtaskTimeUpdate"{% if form.instance and 'update' in form.instance.permissions.taskTime %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskTimeUpdate">Обновление</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="taskTime" value="delete" id="switchCheckDtaskTimeDelete"{% if form.instance and 'delete' in form.instance.permissions.taskTime %} checked{% endif %}>
+                            <label class="form-check-label" for="switchCheckDtaskTimeDelete">Удаление</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">Необходимые компетенции (для удаления нажмите на компетенцию):</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col" id="usedCompetence">
+                    {% for c in competences %}
+                        <div class="btn btn-warning mx-1">{{ c.competence.name }}<input type="hidden" name="competence" value="{{ c.competence.pk }}"></div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div id="ajaxError"></div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Добавить компетенцию
+                        </button>
+                        <ul class="dropdown-menu" id="competences" aria-labelledby="dropdownMenuLink">
+                            <li class="px-3">
+                                <label for="competenceName">Введите название компетенции</label>
+                                <input type="text" class="form-control" name="chars" hx-post="{% url 'cabinet:competence-ajax' %}" hx-target="#competences .competence" hx-trigger="input">
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="competence"><button class="dropdown-item" type="button" data-id="1">Компетенция 1</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col text-end">
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/competence.js' %}"></script>
+{% endblock %}

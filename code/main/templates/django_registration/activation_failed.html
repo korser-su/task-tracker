@@ -1,0 +1,14 @@
+{% extends "base_auth.html" %}
+
+{% block title %}Не удалось активировать аккаунт{% endblock %}
+
+{% block content %}
+    <li class="list-group-item">Сбой активации</li>
+    <li class="list-group-item border-bottom-0 mb-auto font-24">
+        {% if code == 'bad_username' %}Извините, но Ваше имя пользователя недопустимо
+        {% elif code == 'invalid_key' %}Извините, но ключ активации некорректен
+        {% elif code == 'expired' %}Извините, но срок активации аккаунта истёк
+        {% else %}Извините, но Ваш аккаунт уже активирован
+        {% endif %}
+    </li>
+{% endblock %}

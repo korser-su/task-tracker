@@ -1,0 +1,18 @@
+{% extends 'base_cabinet.html' %}
+
+{% block content %}
+    <div class="row mt-3">
+        {% for key, value in tasks.items %}
+            <div class="col">
+                <div class="card rounded-0 h-100">
+                    <div class="card-header bg-body">{{ value.title }}</div>
+                    <div class="card-body bg-secondary bg-opacity-10 task-list" data-status="{{ key }}">
+                        {% for task in value.tasks %}
+                            {% include 'project/task/card.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

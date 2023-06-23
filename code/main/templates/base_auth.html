@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Аккаунт успешно активирован!{% endblock %} | Task Tracker</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/color.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/landing.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-center vh-100">
+            <div class="col-lg-8">
+                <div class="card my-5 shadow-lg">
+                    <ul class="list-group list-group-flush h-100">
+                        <li class="list-group-item">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'cabinet:projects' %}">
+                                        <i class="bi bi-house-door"></i> Вернуться в кабинет
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'main:login' %}">Авторизация</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'main:django_registration_register' %}">Регистрация</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'main:password_reset' %}">Восстановление пароля</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% if messages %}
+                            <li class="list-group-item">
+                                {% for message in messages %}
+                                    <div class="alert alert-{% if message.tags %}{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% endif %} alert-rounded">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                                    </div>
+                                {% endfor %}
+                            </li>
+                        {% endif %}
+                        {% block content %}{% endblock %}
+                        <li class="list-group-item border-top">© {% now 'Y' %} Task Tracker</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'assets/vendor/popper/popper.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script>
+        (() => {
+            'use strict'
+            let mainMenuLinks = document.querySelectorAll('.card-header-tabs .nav-link');
+            for (let i = 0; i < mainMenuLinks.length; i++) {
+                if (window.location.href.indexOf(mainMenuLinks[i].href) !== -1) {
+                    document.querySelector('.nav-inverse-tabs .nav-link.active')?.classList.remove('active');
+                    mainMenuLinks[i].classList.toggle('active');
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

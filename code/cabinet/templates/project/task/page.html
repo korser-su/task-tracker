@@ -1,0 +1,70 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card rounded-0">
+                <div class="card-body">{{ task.content|safe }}</div>
+            </div>
+        </div>
+        <div class="col col-md-4 col-lg-3 col-xxl-3">
+            {% if task.parent %}
+                <div class="card rounded-0 mb-3">
+                    <div class="card-header">Родительская задача</div>
+                    <div class="list-group list-group-flush">
+                        <a href="{{ task.parent.get_absolute_url }}" class="list-group-item list-group-item-action">{{ task.parent.name }}</a>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="card rounded-0">
+                <div class="card-header">Общая информация</div>
+                <div class="card-body">
+                    <p class="card-text">Назначена на <a href="{{ task.member.get_absolute_url }}" class="text-decoration-none">{{ task.member }}</a></p>
+                    <p class="card-text">Статус задачи: {{ task.status_to_view|safe }}</p>
+                    <p class="card-text">Создана: {{ task.created_at }}</p>
+                    <p class="card-text">Дата проверки: {{ task.checked_date }}</p>
+                </div>
+            </div>
+            {% if files %}
+            <div class="card rounded-0 mt-3">
+                <div class="card-header">Прикрепленные файлы</div>
+                <div class="card-body">
+                    {% for file in files %}
+                        <a href="{{ file.get_absolute_url }}" class="card-link">{{ file }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if task.kids %}
+                <div class="card rounded-0 mt-3">
+                    <div class="card-header">Связанные задачи</div>
+                    <div class="list-group list-group-flush">
+                        {% for t in task.kids %}
+                            <a href="{{ t.get_absolute_url }}" class="list-group-item list-group-item-action">{{ t.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <ul class="nav nav-pills nav-fill gap-2 p-1 bg-body border rounded-5 shadow-sm my-3" role="tablist" hx-target="#tab-content" _="on htmx:afterOnLoad take .selected for event.target">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-5 active" data-bs-toggle="tab" type="button" role="tab" aria-selected="true" hx-get="{% url 'cabinet:task-comment-ajax' project_id=project_id task_id=task.pk %}">
+                <i class="bi bi-chat-left-dots"></i> Комментарии
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-5" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" tabindex="-1" hx-get="{% url 'cabinet:task-work-ajax' project_id=project_id task_id=task.pk %}">
+                <i class="bi bi-stopwatch"></i> Трудозатраты
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-5" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" tabindex="-1" hx-get="{% url 'cabinet:task-history-ajax' project_id=project_id task_id=task.pk %}">
+                <i class="bi bi-clock-history"></i> История
+            </button>
+        </li>
+    </ul>
+    <div id="tab-content" class="mb-3" hx-get="{% url 'cabinet:task-comment-ajax' project_id=project_id task_id=task.pk %}" hx-trigger="load"></div>
+{% endblock %}

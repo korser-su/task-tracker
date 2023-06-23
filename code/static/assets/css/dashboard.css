@@ -1,0 +1,78 @@
+/* Navbar */
+.navbar-brand { padding-top: .75rem; padding-bottom: .75rem; background-color: rgba(0, 0, 0, .25); box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25); }
+.navbar .navbar-toggler { top: .25rem; right: 1rem; }
+.navbar .form-control { padding: .75rem 1rem; }
+header .nav-tabs { margin-bottom: -1.25rem; }
+header .nav-tabs .nav-link {
+    --bs-nav-link-color: #fff;
+    --bs-nav-link-hover-color: rgba(255, 255, 255, .75);
+    background-color: rgba(0, 0, 0, 0.15);
+}
+header .nav-tabs .nav-link.active:focus,  header .nav-tabs .nav-link.active:hover,
+header .nav-tabs .nav-link:focus,  header .nav-tabs .nav-link:hover {
+    --bs-nav-tabs-link-hover-border-color: rgba(0, 0, 0, 0.35);
+    --bs-nav-tabs-link-active-border-color: rgba(0, 0, 0, 0.35);
+    --bs-nav-tabs-link-active-color: rgba(255, 255, 255, .75);
+}
+header .nav-tabs .nav-link:focus,  header .nav-tabs .nav-link:hover { background-color: rgba(0, 0, 0, 0.35); }
+.nav-scroller { position: relative; z-index: 2; height: 2.75rem; overflow-y: hidden; }
+.nav-scroller .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    margin-top: -1px;
+    overflow-x: auto;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+/* Sidebar */
+.sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; padding: 60px 0 0; box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1); }
+
+.sidebar-sticky { height: calc(100vh - 48px); overflow-x: hidden; overflow-y: auto; position: relative; }
+.sidebar-heading { font-size: .75rem; }
+.sidebar .nav-link { --bs-nav-link-color: #fff; --bs-nav-link-hover-color: rgba(255, 255, 255, .5); }
+.dropdown-toggle { outline: 0; }
+.scrollarea { overflow-y: auto; }
+
+@media (min-width: 768px) {
+    .sidebar { width: 200px; }
+    .navbar-brand { width: 200px; }
+    main.col { margin-left: 200px; }
+}
+
+#breadcrumb { margin: 0 -0.75rem; --bs-breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E"); }
+
+/* Stats */
+.main-stat .icon { width: 40px; height: 40px; line-height: 40px; text-align: center; }
+.main-stat .title { font-size: 1.1em; font-weight: 300; color: #777; margin: 0 20px; }
+
+/* Tree */
+.tree ul { position: relative; padding-top: 20px; padding-right: 0; padding-left: 0 }
+.tree li { position: relative; padding: 20px 3px 0 3px; float: left; text-align: center; list-style: none; }
+.tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; width: 50%; height: 20px; border-top: 1px solid #ccc; }
+.tree li::after { left: 50%; right: auto; border-left: 1px solid #ccc; }
+.tree li:only-child::after, .tree li:only-child::before { content: ''; display: none; }
+.tree li:only-child { padding-top: 0;}
+.tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+.tree li:last-child::before { border-right: 1px solid #ccc; border-radius: 0 5px 0 0; }
+.tree li:first-child::after { border-radius: 5px 0 0 0; }
+.tree ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 1px solid #ccc; width: 0; height: 20px; }
+.tree li a:not(.members) { display: inline-block; text-decoration: none; }
+.tree li a:not(.members):hover, .tree li a:not(.members):hover + ul li a:not(.members) { color: #000; background: #c8e4f8; border: 1px solid #94a0b4; }
+.tree li a:not(.members):hover + ul li::after, .tree li a:not(.members):hover + ul li::before,
+.tree li a:not(.members):hover + ul::before, .tree li a:not(.members):hover + ul ul::before {
+    content: '';
+    border-color: #94a0b4;
+}
+
+.tree .members { display: inline-block; width: 28px; height: 28px; line-height: 26px; text-align: center; border-radius: 50%; border: 1px solid #6c757d; color: #6c757d; }
+
+.avatar { width: 100px; height: 100px; line-height: 100px; }
+
+.funnel-stages .row.px-5 .card { border-top: none; }
+
+.task.selected { border-color: #999 !important; }
+/* Calendar */
+.calendar table { width: 100%; }
+.calendar td { width: 14.2857142857%; }

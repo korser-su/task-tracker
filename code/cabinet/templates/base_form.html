@@ -1,0 +1,15 @@
+{% extends 'base_cabinet.html' %}
+
+{% block content %}
+    <div class="card my-3 rounded-0">
+        <form class="card-body" method="post">
+            {% csrf_token %}
+            {% if next %}
+            <input type="hidden" name="next" value="{{ next|urlencode }}">
+            {% endif %}
+            {{ form.as_div }}
+            <button type="reset" class="btn btn-secondary">Отмена</button>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+version: '3'
+
+# хранилища
+volumes:
+    pgdata:
+        driver: local
+services:
+    nginx:
+        logging:
+            options:
+                max-size: 10m
+        # при падении будет стараться подняться
+        restart: always
+        # только свежий nginx
+        image: nginx:latest
+        # слушает порт 8080
+        expose:
+            - 8080
+        ports:
+            - "80:80"
+        # монтируем только те директории, в которых лежит статика, т.к. nginx с динамикой не будет работать. Также директорию с логами и файл настройки, который мы подготовили.
+        volumes:
+            - ./code/static:/srv/www/code/static
+            - ./code/logs:/srv/www/code/logs
+            - ./docker/nginx:/etc/nginx/conf.d
+        # и nginx зависит от контейнера python. Т.е. python должен быть запущен первым
+        depends_on:
+            - python
+    python:
+        logging:
+            options:
+                max-size: 10m
+        restart: always
+        # указываем откуда собирать образ
+        build:
+            context: .
+            dockerfile: docker/python/Dockerfile
+        # монтируем директорию проекта
+        volumes:
+            - ./code:/srv/www/code
+            - ./code/logs/cron.log:/var/log/cron.log
+        expose:
+            - 8000
+        # запускаем gunicorn
+        command: "gunicorn -c gunicorn.py TaskTracker.wsgi --timeout 300"
+        depends_on:
+            - postgres
+        environment:
+            SECRET_KEY: django-insecure-i5#*f5@3mje+rw!rj)uk*i4o!#v44f+26^ua9s=f#lx2)owd=3
+            DB_USER: user
+            DB_PASSWORD: password
+            DB: database
+            DB_PORT: 5432
+    postgres:
+        logging:
+            options:
+                max-size: 10m
+        image: postgres:latest
+        expose:
+            - 5432
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: database
+            PGDATA: /var/lib/postgresql/data

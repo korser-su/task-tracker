@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Tracker</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/landing.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-dark bg-opacity-75">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-6 vh-100 d-flex flex-column">
+                <nav class="navbar mb-auto justify-content-start">
+                    <a class="navbar-brand text-white fw-bold" href="/">Task Tracker</a>
+                </nav>
+                <main class="text-center">
+                    <h2 class="h1 text-white">Добро пожаловать в Task Tracker!</h2>
+                    <p class="h2 text-white">В настоящее время данный сайт находится в активной фазе тестирования и совсем скоро будет запущен</p>
+                    <a href="{% url 'cabinet:projects' %}" class="btn btn-lg btn-light mt-5">Присоединяйтесь к тестированию!</a>
+                </main>
+                <footer class="mt-auto mb-3 text-white">
+                    <p>© {% now 'Y' %} Task Tracker.</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

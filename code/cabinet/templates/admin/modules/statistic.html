@@ -1,0 +1,16 @@
+{% extends 'admin_tools/dashboard/module.html' %}
+{% block module_content %}
+    <p>Количество пользователей: <b>{{ module.users_count }}</b></p>
+    <hr>
+    <p>Количество событий в календарях: <b>{{ module.events_count }}</b></p>
+    <hr>
+    <p>Количество компетенций: <b>{{ module.competence_count }}</b></p>
+    <hr>
+    <p>Количество файлов: <b>{{ module.file_count }}</b></p>
+    <hr>
+    <p>Количество проектов: <b>{{ module.project_count }}</b></p>
+    <hr>
+    <p>Количество спринтов: <b>{{ module.sprint_count }}</b></p>
+    <hr>
+    <p>Количество задач: <b>{{ module.task_count }}</b></p>
+{% endblock %}

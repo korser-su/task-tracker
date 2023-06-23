@@ -1,0 +1,26 @@
+<div class="modal-dialog">
+    <form class="modal-content" action="{% url 'cabinet:user-create-member' user_id=user_id %}" method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="inviteModalLabel">Пригласить пользователя в проект</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <label for="role">Выберите роль</label>
+            <select id="role" class="form-select" name="role">
+                <option disabled selected>Не выбрана</option>
+                {% for p in projects %}
+                    <optgroup label="{{ p.name }}">
+                        {% for r in p.role_set.all %}
+                            <option value="{{ r.pk }}">{{ r.name }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Пригласить</button>
+        </div>
+    </form>
+</div>

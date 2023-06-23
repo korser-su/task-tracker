@@ -1,0 +1,9 @@
+.idea
+code/logs
+code/files
+code/static/media/photos
+!code/static/media/photos/.gitkeep
+code/static/media/comments
+!code/static/media/comments/.gitkeep
+code/static/media/tasks
+!code/static/media/tasks/.gitkeep

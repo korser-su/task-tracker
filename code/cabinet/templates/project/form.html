@@ -1,0 +1,53 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="card my-3 rounded-0">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if next %}
+                            <input type="hidden" name="next" value="{{ next|urlencode }}">
+                        {% endif %}
+                        {{ form.as_div }}
+                        <p class="card-text">Состав команды:</p>
+                        <div id="team">
+                            {% for member in project_members %}
+                                <div class="card my-2">
+                                    <div class="card-body">
+                                        <input type="hidden" name="members" value="{{ member.pk }}">
+                                        <i class="bi bi-person-bounding-box me-3"></i>
+                                        <a href="{{ member.get_absolute_url }}" class="text-decoration-none" target="_blank">{{ member }}</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button type="reset" class="btn btn-secondary">Отмена</button>
+                        <button type="submit" class="btn btn-success">Сохранить</button>
+                    </form>
+                </div>
+                <div class="col col-md-4 col-lg-3 col-xl-3 col-xxl-3">
+                    <p class="card-text">Доступные сотрудники для проекта</p>
+                    <div id="member-list">
+                        {% for member in members %}
+                            <div class="card my-2">
+                                <div class="card-body">
+                                    <input type="hidden" name="members" value="{{ member.pk }}">
+                                    <i class="bi bi-person-bounding-box me-3"></i>
+                                    <a href="{{ member.get_absolute_url }}" class="text-decoration-none" target="_blank">{{ member }}</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/project-form.js' %}"></script>
+{% endblock %}

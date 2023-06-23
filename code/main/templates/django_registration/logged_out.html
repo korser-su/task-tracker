@@ -1,0 +1,10 @@
+{% extends "base_auth.html" %}
+
+{% block title %}Вы успешно вышли{% endblock %}
+
+{% block content %}
+    <li class="list-group-item">Вы успешно вышли!</li>
+    <li class="list-group-item border-bottom-0 mb-auto">
+        <a href="{% url 'main:login'%}">Нажмите, чтобы ещё раз авторизоваться.</a>
+    </li>
+{% endblock %}

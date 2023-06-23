@@ -1,0 +1,39 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="row mt-3">
+        {% for member in members %}
+            <div class="col col-md-4 col-lg-3 col-xxl-3">
+                <div class="card shadow text-center rounded-0">
+                    <div class="card-body">
+                        {% if not member.is_approved and not member.is_entry %}
+                            <span class="badge text-bg-danger mb-1">Ещё не принял приглашение</span>
+                        {% endif %}
+                        {% if member.is_entry %}
+                            <span class="badge text-bg-success mb-1">Подал заявку на вступление</span>
+                        {% endif %}
+                        <a class="avatar mx-auto rounded-circle d-block" style="background-image: url('{% if member.photo %}{{ member.photo }}{% else %}{% static 'assets/images/no-image.png' %}{% endif %}')" href="{% if member.is_entry %}{% url 'cabinet:user-page' user_id=member.pk %}{% else %}{{ member.get_absolute_url }}{% endif %}"></a>
+                        <a href="{% if member.is_entry %}{% url 'cabinet:user-page' user_id=member.pk %}{% else %}{{ member.get_absolute_url }}{% endif %}" class="fs-3 card-text">{{ member.name }}</a>
+                        {% for m in member.members %}
+                        <p class="fs-4 card-text">{{ m.role.name }}</p>
+                        {% endfor %}
+                    </div>
+                    {% if member.is_entry %}
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{% url 'cabinet:member-decline' project_id=project_id user_id=member.pk %}" class="btn btn-danger">Отклонить</a>
+                                </div>
+                                <div class="col">
+                                    <a href="{% url 'cabinet:member-accept' project_id=project_id user_id=member.pk %}" class="btn btn-success">Принять</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

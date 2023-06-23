@@ -1,0 +1,52 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card shadow-lg rounded-0 text-center">
+                <div class="card-body">
+                    <div class="avatar mx-auto rounded-circle d-block" style="background-image: url('{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'assets/images/no-image.png' %}{% endif %}')"></div>
+                    <h2 class="h3 card-text">{{ user }}</h2>
+                    {% if member_update or member_delete %}
+                        {% for member in members %}
+                            <div class="input-group justify-content-center mb-3">
+                                <span class="input-group-text">{{ member.role.name }}</span>
+                                {% if member_update %}
+                                    {% include 'base_link.html' with url=member.get_update_url class='btn btn-warning' get=member.modal_get_update_url text='<i class="bi bi-pencil"></i>' %}
+                                {% endif %}
+                                {% if member_delete %}
+                                    {% include 'base_link.html' with url=member.get_delete_url class='btn btn-danger' get=member.modal_get_delete_url text='<i class="bi bi-trash3-fill"></i>' %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for member in members %}
+                            <p class="fs-4 card-text">{{ member.role.name }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card shadow-lg rounded-0">
+                <div class="card-body">
+                    <div class="row g-3 row-cols-3">
+                        {% regroup tasks by get_status_display as status_list %}
+                        {% for status in status_list %}
+                            <div class="col">
+                                <div class="card rounded-0 h-100">
+                                    <div class="card-header bg-body">{{ status.grouper }}</div>
+                                    <div class="card-body bg-secondary bg-opacity-10 task-list" data-status="{{ status }}">
+                                        {% for task in status.list %}{% include 'project/task/card.html' %}{% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

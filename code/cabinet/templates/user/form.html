@@ -1,0 +1,114 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block head %}<meta name="csrfmiddlewaretoken" content="{{ csrf_token }}">{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data" class="mt-3">
+        {% csrf_token %}
+        <div class="row mt-3">
+            <div class="col-2">
+                <div class="card">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" class="card-img-top" alt="{{ user }}">
+                    {% else %}
+                        <img src="{% static 'assets/images/no-image.png' %}" class="card-img-top" alt="{{ user }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{ user }}</h5>
+                    </div>
+                    <div class="card-footer text-center">
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Изображение профиля</label>
+                            <input class="form-control" type="file" name="avatar" id="avatar" accept="image/jpeg, image/png">
+                        </div>
+                        <a class="btn btn-primary" href="{% url 'main:password_change' %}">
+                            <i class="bi bi-pencil"></i> Изменить пароль
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card mb-3">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Основные данные</li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="col">
+                                    <label class="form-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            {{ form.command_invites }}
+                            <label class="form-check-label" for="{{ form.command_invites.id_for_label }}">
+                                {{ form.command_invites.label }}
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-header">Компетенции</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col"><div id="ajaxError"></div></div>
+                        </div>
+                        <div class="row">
+                            <div class="col" id="usedCompetence">
+                                {% for c in user.usercompetence_set.all %}
+                                    <div class="btn btn-warning mx-1">{{ c.competence }}<input type="hidden" name="competence" value="{{ c.competence.pk }}"></div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-auto">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Добавить компетенцию
+                                    </button>
+                                    <ul class="dropdown-menu" id="competences" aria-labelledby="dropdownMenuLink">
+                                        <li class="px-3">
+                                            <label for="competenceName">Введите название компетенции</label>
+                                            <input type="text" class="form-control" name="chars" hx-post="{% url 'cabinet:competence-ajax' %}" hx-target="#competences .competence" hx-trigger="input">
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li class="competence"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">Проект</div>
+                            <div class="col">Роль</div>
+                            <div class="col">Количество задач</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% for member in user.member_set.all %}
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{{ member.project.get_absolute_url }}">{{ member.project }}</a>
+                                </div>
+                                <div class="col">{{ member.role }}</div>
+                                <div class="col">{{ member.task_set.count }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Сохранить</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/competence.js' %}"></script>
+{% endblock %}

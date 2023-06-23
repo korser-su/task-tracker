@@ -1,0 +1,7 @@
+<div class="card mb-3 task{% if task.sprint and task.sprint.end < dt_now and not task.status == 'closed' %} border-warning{% endif %}{% if not task.sprint %} border-danger{% endif %}" data-task-id="{{ task.pk }}">
+    <div class="card-body">
+        <a href="{{ task.get_absolute_url }}" class="card-title h5 text-decoration-none">{{ task.name }}</a>
+        <h6 class="card-subtitle text-muted">Назначена на <a href="{{ task.member.get_absolute_url }}" class="text-decoration-none">{{ task.member }}</a></h6>
+        <p class="card-text">Дата проверки: {{ task.checked_date }}</p>
+    </div>
+</div>

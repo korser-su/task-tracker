@@ -1,0 +1,22 @@
+<div class="modal-dialog modal-dialog-centered">
+    <form method="post" action="{{ url }}" class="modal-content" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <input type="hidden" name="parent" value="{{ comment_id }}">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Ответ на комментарий</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{ form.as_div }}
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Прикрепляемые файлы</label>
+                <input class="form-control" type="file" id="formFile" name="files" multiple>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-success">Создать</button>
+        </div>
+    </form>
+</div>

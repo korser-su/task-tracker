@@ -1,0 +1,9 @@
+{% extends 'base_cabinet.html' %}
+
+{% block content %}
+    <ul class="tree mt-3">
+        {% for role in roles %}
+            {% include 'role/tree_view.html' %}
+        {% endfor %}
+    </ul>
+{% endblock %}

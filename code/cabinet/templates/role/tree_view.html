@@ -1,0 +1,21 @@
+<li>
+    <a href="{{ role.get_absolute_url }}" class="card text-decoration-none">
+        <div class="card-body">
+            {{ role.name }}
+            {% with members=role.companymember_set.all %}
+                {% if members %}<hr>
+                    {% for member in members %}
+                        <div class="members bg-secondary bg-opacity-10 {% if not loop.last %}me-1{% endif %}">{{ member.user.email|slice:2 }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </a>
+    {% if role.kids %}
+        <ul>
+         {% for ch in role.kids %}
+             {% include 'role/tree_view.html' with role=ch %}
+         {% endfor %}
+         </ul>
+    {% endif %}
+</li>

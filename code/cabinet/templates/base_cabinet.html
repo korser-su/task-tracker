@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block head %}{% endblock %}
+    <title>{{ title|safe }} | Task Tracker</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    {% block styles %}{% endblock %}
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<div id="main-wrapper">
+    <header class="z-3 sticky-top bg-gradient">
+        <nav class="navbar navbar-light">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'main:index' %}">Task Tracker</a>
+            </div>
+            <ul class="navbar-nav me-auto mt-md-0 align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link sidebartoggler text-muted px-2" href="javascript:void(0)">
+                        <span class="navbar-toggler-icon"></span>
+                    </a>
+                </li>
+                <li class="nav-item me-1"><h1 class="h3 mb-0">{{ title|safe }}</h1></li>
+                <li class="nav-item me-auto">{% block description %}{% endblock %}</li>
+                {% for link in admin_links %}
+                    <li class="nav-item me-1">
+                        {% include 'base_link.html' with url=link.url class=link.class get=link.get text=link.text %}
+                    </li>
+                {% endfor %}
+                <li class="nav-item dropdown me-1">
+                    <a class="nav-link dropdown-toggle px-2 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-circle-half"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end position-absolute">
+                        <li><button class="dropdown-item" data-bs-theme-value="light"><i class="bi bi-brightness-high-fill"></i> День</button></li>
+                        <li><button class="dropdown-item" data-bs-theme-value="dark"><i class="bi bi-moon-stars-fill"></i> Ночь</button></li>
+                        <li><button class="dropdown-item" data-bs-theme-value="auto"><i class="bi bi-circle-half"></i> Авто</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <aside class="left-sidebar z-2 bg-secondary bg-opacity-10 border-end">
+        <nav class="sidebar-nav">
+            <ul id="sidebarnav">
+                <li><a href="{% url 'cabinet:projects' %}">
+                    <i class="bi bi-boxes"></i> <span class="hide-menu">Проекты</span>
+                </a></li>
+                <li><a href="{% url 'cabinet:users' %}">
+                    <i class="bi bi-people-fill"></i> <span class="hide-menu">Пользователи</span>
+                </a></li>
+                <li><a href="{% url 'cabinet:user-page' user_id=request.user.pk %}">
+                    <i class="bi bi-person-fill"></i> <span class="hide-menu">Профиль</span>
+                </a></li>
+                <li><a href="{% url 'main:logout' %}">
+                    <i class="bi bi-door-open me-2"></i> <span class="hide-menu">Выйти</span>
+                </a></li>
+            </ul>
+        </nav>
+    </aside>
+    <div class="page-wrapper">
+        <div class="container-fluid">
+            {% if project_id %}
+            <div class="row">
+                <div class="col">
+                    <ul class="nav nav-inverse-tabs nav-justified">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cabinet:project-page' project_id=project_id %}">
+                                <i class="bi bi-boxes"></i> Вернуться в проект
+                            </a>
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="{% url 'cabinet:roles' project_id=project_id %}">
+                                <i class="bi bi-person-lines-fill"></i> Роли
+                            </a>
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="{% url 'cabinet:members' project_id=project_id %}">
+                                <i class="bi bi-people-fill"></i> Участники
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "cabinet:project-history" project_id=project_id %}">
+                                <i class="bi bi-clock-history"></i> История
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="col" id="errors">
+                    {% for message in messages %}
+                        <div class="alert mt-3 alert-{% if message.tags %}{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% endif %} alert-dismissible" role="alert">
+                            {{ message|safe }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row"><div class="col">{% block content %}{% endblock %}</div></div>
+        </div>
+        <footer class="footer z-1 bg-body border-top">© {% now 'Y' %} Task Tracker</footer>
+    </div>
+</div>
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Тестовое модальное окно</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Тестовое модальное окно.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">ОК</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'assets/vendor/popper/popper.min.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/htmx/htmx.min.js' %}"></script>
+<script src="{% static 'assets/js/custom.js' %}"></script>
+<script src="{% static 'assets/js/color-mode.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

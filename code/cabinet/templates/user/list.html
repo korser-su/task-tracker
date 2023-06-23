@@ -1,0 +1,62 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block head %}<meta name="csrfmiddlewaretoken" content="{{ csrf_token }}">{% endblock %}
+
+{% block content %}
+    <form action="{% url 'cabinet:user-competence-filter' %}" hx-post="{% url 'cabinet:user-competence-filter' %}" hx-target="#user-list" hx-swap="innerHTML" class="card row rounded-0 border-0 border-bottom bg-secondary bg-opacity-10" method="post" id="filter">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Фамилия">
+                        <label for="lastname">Фамилия</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Имя">
+                        <label for="name">Имя</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" id="usedCompetence"></div>
+                <div class="col col-md-auto">
+                    <div id="ajaxError"></div>
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                Добавить компетенцию
+                            </button>
+                            <ul class="dropdown-menu" id="competences" aria-labelledby="dropdownMenuLink">
+                                <li class="px-3">
+                                    <label for="competenceName">Введите название компетенции</label>
+                                    <input type="text" class="form-control" name="chars" hx-post="{% url 'cabinet:competence-ajax' %}" hx-target="#competences .competence" hx-trigger="input">
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="competence"></li>
+                            </ul>
+                        </div>
+                        <button type="submit" class="btn btn-success">Подобрать пользователей</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="user-list">
+        {% include 'user/ajax-list.html' %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/competence.js' %}"></script>
+{% endblock %}

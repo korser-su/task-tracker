@@ -1,0 +1,29 @@
+<div class="card rounded-0 mt-1">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <h5 class="card-title">{{ comment.member }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ comment.created_at }}</h6>
+            <p class="card-text">{{ comment.message }}</p>
+        </li>
+        {% if comment.files.count %}
+        <li class="list-group-item">
+            <p class="card-text">Файлы:</p>
+            {% for file in comment.files %}
+                <a href="{{ file.get_absolute_url }}" class="card-link">{{ file }}</a>
+            {% endfor %}
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+            <a href="{{ comment.get_delete_url }}" class="card-link" hx-get="{{ comment.modal_get_delete_url }}" hx-target="#modal" hx-trigger="click" hx-swap="innerHtml">Удалить</a>
+            <a href="{{ comment.get_update_url }}" class="card-link" hx-get="{{ comment.modal_get_update_url }}" hx-target="#modal" hx-trigger="click" hx-swap="innerHtml">Изменить</a>
+            <a href="{{ comment.answer_url }}" class="card-link" hx-get="{{ comment.modal_answer_url }}" hx-target="#modal" hx-trigger="click" hx-swap="innerHtml">Ответить</a>
+        </li>
+    </ul>
+</div>
+{% if comment.kids %}
+<div class="ps-5 w-100">
+    {% for c in comment.kids %}
+        {% include 'project/task/comment/tree_view.html' with comment=c %}
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,63 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="row mt-3">
+        <div class="col-2">
+            <div class="card">
+                {% if user.photo %}
+                    <img src="{{ user.photo.url }}" class="card-img-top" alt="{{ user }}">
+                {% else %}
+                    <img src="{% static 'assets/images/no-image.png' %}" class="card-img-top" alt="{{ user }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ user }}</h5>
+                </div>
+                {% if projects and request.user != user %}
+                <div class="card-footer text-center">
+                    {% url 'cabinet:user-modal-invite' user_id=user.pk as modal_url %}
+                    {% include 'base_link.html' with url='#' class='btn btn-primary' get=modal_url text='<i class="bi bi-plus-lg"></i> Пригласить' %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Компетенции</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col"><div id="ajaxError"></div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col" id="usedCompetence">
+                            {% for c in user.usercompetence_set.all %}
+                                <div class="btn btn-warning mx-1">{{ c.competence }}</div>
+                            {% empty %}
+                                Компетенции не указаны
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">Проект</div>
+                        <div class="col">Роль</div>
+                        <div class="col">Количество задач</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% for member in user.member_set.all %}
+                        <div class="row">
+                            <div class="col"><a href="{{ member.project.get_absolute_url }}">{{ member.project }}</a></div>
+                            <div class="col">{{ member.role }}</div>
+                            <div class="col">{{ member.task_set.count }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

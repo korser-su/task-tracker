@@ -1,0 +1,29 @@
+{% extends 'base_cabinet.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-4 g-4 mt-0">
+        {% for member in role.member_set.all %}
+            <div class="col">
+                <a class="card shadow text-center link-dark text-decoration-none rounded-0" href="{{ member.get_absolute_url }}">
+                    <div class="card-body">
+                        {% if not member.is_approved %}
+                            <span class="badge text-bg-danger">Ещё не принял приглашение</span>
+                        {% endif %}
+                        {% if member.user.photo %}
+                            <div class="avatar mx-auto rounded-circle text-white">
+                                <img src="{{ member.user.photo.url }}" alt="{{ member }}" class="img-fluid rounded-circle">
+                            </div>
+                        {% else %}
+                            <div class="avatar bg-secondary mx-auto rounded-circle text-white opacity-50">
+                                <i class="bi bi-person-bounding-box fs-1"></i>
+                            </div>
+                        {% endif %}
+                        <h2 class="h3 card-text">{{ member }}</h2>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
